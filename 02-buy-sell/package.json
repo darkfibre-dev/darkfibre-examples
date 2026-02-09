@@ -1,0 +1,18 @@
+{
+  "name": "darkfibre-example-buy-sell",
+  "version": "1.0.0",
+  "description": "Complete buy/sell cycle using the Darkfibre SDK",
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "dependencies": {
+    "@darkfibre/sdk": "^0.0.2",
+    "dotenv": "^17.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
