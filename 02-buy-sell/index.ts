@@ -20,7 +20,6 @@ if (!SOLANA_PRIVATE_KEY) {
   process.exit(1);
 }
 
-
 // Main
 const sdk = new DarkfibreSDK({
   apiKey: DARKFIBRE_API_KEY,

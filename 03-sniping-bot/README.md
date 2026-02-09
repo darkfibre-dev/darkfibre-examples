@@ -1,6 +1,6 @@
 # Sniping Bot
 
-WebSocket-based token sniper that auto-buys new PumpFun token creates.
+WebSocket-based token sniper that auto-buys new PumpFun tokens.
 
 ## Setup
 
@@ -32,7 +32,7 @@ tsx index.ts
 
 Edit `index.ts` to change:
 
-- `SOL_AMOUNT` - SOL to spend per snipe (default: 0.002)
+- `SOL_AMOUNT` - SOL to spend per snipe (default: 0.005)
 - `SLIPPAGE` - Slippage tolerance (default: 0.1 = 10%)
 - `PRIORITY` - Transaction priority (default: `'fast'`)
 - `MAX_SNIPES` - Maximum snipes before exit (-1 for unlimited)
@@ -43,14 +43,13 @@ Edit `index.ts` to change:
 |----------|-------------|
 | `DARKFIBRE_API_KEY` | Your Darkfibre API key |
 | `SOLANA_PRIVATE_KEY` | Your wallet private key (base58) |
-| `WS_URL` | WebSocket URL (`wss://ws.darkfibre.dev/v1`) |
 
 ## Production Notes
 
 The demo sells immediately after buying. For production:
 
 1. Remove or modify the sell logic
-2. Add your own filters (check token metadata, liquidity, etc.)
+2. Add your own filters (check token metadata, etc.)
 3. Implement your exit strategy
 4. Consider adding position tracking
 

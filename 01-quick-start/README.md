@@ -24,7 +24,7 @@ tsx index.ts
 ## What It Does
 
 1. Initializes the SDK with your credentials
-2. Buys tokens with 0.01 SOL
+2. Buys tokens with 0.005 SOL
 3. Prints the transaction signature and tokens received
 
 ## Configuration
