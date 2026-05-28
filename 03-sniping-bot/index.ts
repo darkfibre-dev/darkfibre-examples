@@ -1,9 +1,10 @@
 import { DarkfibreSDK, APIError } from '@darkfibre/sdk';
+import type { MintInput } from '@darkfibre/sdk';
 import WebSocket from 'ws';
 import 'dotenv/config';
 
 // Configuration
-const SOL_AMOUNT = 0.005;             // SOL per snipe
+const QUOTE_AMOUNT = 0.005;           // Quote currency per snipe
 const SLIPPAGE = 0.1;                 // 10% slippage tolerance
 const PRIORITY = 'fast' as const;     // Transaction priority
 const MAX_SNIPES: number = 5;         // -1 for unlimited
@@ -44,18 +45,20 @@ function checkExit() {
 }
 
 // Snipe Handler
-async function handleCreate(mint: string, symbol: string) {
+async function handleCreate(mint: string, symbol: string, quoteMint: MintInput) {
   if (MAX_SNIPES !== -1 && snipesStarted >= MAX_SNIPES) return;
   snipesStarted++;
 
   const snipeNum = snipesStarted;
   console.log(`\n[SNIPE #${snipeNum}] ${symbol} (${mint})`);
+  console.log(`  quoteMint: ${quoteMint}`);
 
   try {
-    // Buy
+    // Buy — use quoteMint from the create event so it matches the pool
     const buyResult = await sdk.buy({
       mint,
-      solAmount: SOL_AMOUNT,
+      quoteAmount: QUOTE_AMOUNT,
+      quoteMint,
       slippage: SLIPPAGE,
       priority: PRIORITY,
     });
@@ -70,11 +73,12 @@ async function handleCreate(mint: string, symbol: string) {
     const sellResult = await sdk.sell({
       mint,
       tokenAmount: buyResult.tradeResult.outputAmount,
+      quoteMint,
       slippage: SLIPPAGE,
       priority: PRIORITY,
     });
 
-    console.log(`[SELL #${snipeNum}] ${sellResult.tradeResult.outputAmount} SOL`);
+    console.log(`[SELL #${snipeNum}] ${sellResult.tradeResult.outputAmount} quote received`);
     console.log(`  https://solscan.io/tx/${sellResult.signature}`);
 
   } catch (err) {
@@ -109,7 +113,7 @@ function connect() {
 
     console.log(`[WS] Connected`);
     console.log(`[WS] Listening for new tokens...`);
-    console.log(`[WS] Config: ${SOL_AMOUNT} SOL | ${SLIPPAGE * 100}% slippage | ${PRIORITY} priority`);
+    console.log(`[WS] Config: ${QUOTE_AMOUNT} per snipe | ${SLIPPAGE * 100}% slippage | ${PRIORITY} priority`);
     if (MAX_SNIPES !== -1) {
       console.log(`[WS] Will stop after ${MAX_SNIPES} snipes`);
     }
@@ -123,7 +127,13 @@ function connect() {
       // Skip mayhem mode tokens
       if (msg.data.isMayhemMode) return;
 
-      handleCreate(msg.data.mint, msg.data.symbol);
+      const quoteMint = msg.data.quoteMint;
+      if (!quoteMint) {
+        console.log(`[WS] Skipping ${msg.data.symbol}: missing quoteMint on create event`);
+        return;
+      }
+
+      handleCreate(msg.data.mint, msg.data.symbol, quoteMint);
     }
   };
 

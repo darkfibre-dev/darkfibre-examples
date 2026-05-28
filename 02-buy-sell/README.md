@@ -34,7 +34,8 @@ tsx index.ts
 Edit `index.ts` to change:
 
 - `MINT` - Token mint address to trade
-- `SOL_AMOUNT` - Amount of SOL to spend on buy
+- `QUOTE_AMOUNT` - Amount of quote currency to spend on buy
+- `QUOTE_MINT` - Quote currency (`'SOL'`, `'WSOL'`, `'USDC'` or mint address)
 - `SLIPPAGE` - Slippage tolerance (0.05 = 5%)
 - `PRIORITY` - Transaction priority (`'fast'`, `'faster'`, `'fastest'`)
 

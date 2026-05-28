@@ -12,7 +12,8 @@ async function main() {
 
   const result = await sdk.buy({
     mint: TOKEN_ADDRESS,
-    solAmount: 0.005,
+    quoteAmount: 0.005,
+    quoteMint: 'SOL',
     slippage: 0.05,
     priority: 'fast',
   });

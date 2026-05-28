@@ -3,7 +3,8 @@ import 'dotenv/config';
 
 // Configuration
 const MINT = 'YOUR_TOKEN_MINT_HERE';  // Token to trade
-const SOL_AMOUNT = 0.005;              // SOL to spend on buy
+const QUOTE_AMOUNT = 0.005;            // Quote amount to spend on buy
+const QUOTE_MINT = 'SOL' as const;     // Quote currency (SOL, WSOL, USDC)
 const SLIPPAGE = 0.05;                // 5% slippage tolerance
 const PRIORITY = 'fast' as const;     // Transaction priority
 
@@ -28,11 +29,12 @@ const sdk = new DarkfibreSDK({
 
 try {
   // Buy
-  console.log(`\n[BUY] Buying tokens with ${SOL_AMOUNT} SOL...`);
+  console.log(`\n[BUY] Buying tokens with ${QUOTE_AMOUNT} ${QUOTE_MINT}...`);
 
   const buyResult = await sdk.buy({
     mint: MINT,
-    solAmount: SOL_AMOUNT,
+    quoteAmount: QUOTE_AMOUNT,
+    quoteMint: QUOTE_MINT,
     slippage: SLIPPAGE,
     priority: PRIORITY,
   });
@@ -52,6 +54,7 @@ try {
   const sellResult = await sdk.sell({
     mint: MINT,
     tokenAmount: buyResult.tradeResult.outputAmount,
+    quoteMint: QUOTE_MINT,
     slippage: SLIPPAGE,
     priority: PRIORITY,
   });

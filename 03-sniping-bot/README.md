@@ -24,7 +24,7 @@ tsx index.ts
 
 1. Connects to the Darkfibre WebSocket feed
 2. Subscribes to PumpFun `create` events
-3. Auto-buys newly created tokens
+3. Auto-buys newly created tokens using `quoteMint` from the create event
 4. (Demo) Immediately sells back for testing
 5. Reconnects with exponential backoff on disconnect
 
@@ -32,10 +32,12 @@ tsx index.ts
 
 Edit `index.ts` to change:
 
-- `SOL_AMOUNT` - SOL to spend per snipe (default: 0.005)
+- `QUOTE_AMOUNT` - Quote currency to spend per snipe (default: 0.005)
 - `SLIPPAGE` - Slippage tolerance (default: 0.1 = 10%)
 - `PRIORITY` - Transaction priority (default: `'fast'`)
 - `MAX_SNIPES` - Maximum snipes before exit (-1 for unlimited)
+
+The sniper passes `msg.data.quoteMint` from each create event into `sdk.buy()` and `sdk.sell()` so trades match the pool's quote currency (SOL, USDC, etc.).
 
 ## Environment Variables
 
